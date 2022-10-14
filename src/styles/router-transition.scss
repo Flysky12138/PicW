@@ -1,0 +1,14 @@
+.router-transition {
+  &-enter-from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  &-leave-from {
+    display: none;
+  }
+  &-enter-active {
+    transition-property: opacity transform;
+    transition-duration: 1s;
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
+}
