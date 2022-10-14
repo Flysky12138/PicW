@@ -10,6 +10,9 @@ const vitepwa = VitePWA({
   workbox: {
     globPatterns: ['**/*.{js,css,html,ico,png,svg}']
   },
+  devOptions: {
+    enabled: true
+  },
   includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'favicon-16x16.png', 'favicon-32x32.png'],
   manifest: {
     name: 'PicW',
