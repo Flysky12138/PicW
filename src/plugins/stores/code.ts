@@ -33,7 +33,7 @@ const storeSetup = () => {
       return (username, repository, directory, filename) => [
         {
           label: 'jsDelivr',
-          text: `https://cdn.jsdelivr.net/gh/${username}/${repository}/${directory}/${filename}`.replaceAll(/\/{2,}/g, '/')
+          text: `https://cdn.jsdelivr.net/gh/${username}/${repository}/${directory}/${filename}`.replaceAll(/(?<!:)\/{2,}/g, '/')
         }
       ]
     }
