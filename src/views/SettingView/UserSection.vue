@@ -55,6 +55,7 @@
         append-icon="mdi-refresh"
         @click:append="reposData"
         :loading="reposInputLoading"
+        :disabled="!token"
       ></v-select>
     </v-col>
     <v-col cols="12" sm="6">
@@ -70,6 +71,7 @@
         append-icon="mdi-refresh"
         @click:append="dirsData"
         :loading="dirsInputLoading"
+        :disabled="!token"
       ></v-combobox>
     </v-col>
   </v-row>
