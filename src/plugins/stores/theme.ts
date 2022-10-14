@@ -3,7 +3,7 @@ import { ref, watchEffect } from 'vue'
 import { useTheme } from 'vuetify'
 
 const storeSetup = () => {
-  const type = ref<'dark' | 'light'>('dark')
+  const type = ref<'dark' | 'light'>('light')
 
   // 监听值并修改主题
   const theme = useTheme()
