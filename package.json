@@ -15,7 +15,8 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "preview": "vite preview --port 4173",
     "type-check": "vue-tsc --noEmit",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "cz": "cz"
   },
   "lint-staged": {
     "*.{ts,vue,cjs}": "eslint --fix",
