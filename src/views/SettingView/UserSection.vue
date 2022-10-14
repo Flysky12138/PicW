@@ -32,6 +32,7 @@
         prepend-inner-icon="mdi-link-variant"
         @click:prepend-inner="openGithubTokenPage"
         @keyup.enter.exact="checkUserToken"
+        @blur="checkUserToken"
         :loading="tokenInputLoading"
         :disabled="!name"
         :type="showToken ? 'text' : 'password'"
@@ -71,7 +72,7 @@
         append-icon="mdi-refresh"
         @click:append="dirsData"
         :loading="dirsInputLoading"
-        :disabled="!token"
+        :disabled="!repository"
       ></v-combobox>
     </v-col>
   </v-row>
@@ -116,7 +117,6 @@ const checkUserToken = async () => {
   try {
     await userToken(token.value)
     reposData()
-    dirsData()
   } catch (error) {
     console.error(error)
     token.value = ''
