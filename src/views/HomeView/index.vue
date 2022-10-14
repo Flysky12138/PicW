@@ -83,7 +83,7 @@ const uploadImage = async (filename: string, fileblob: File) => {
 
 // 样式
 const mdiCloudUploadOutline = computed(() => {
-  return files.value.length == 0 ? `url(${new URL('/src/assets/cloud-upload-outline.svg', import.meta.url).href})` : ''
+  return files.value.length == 0 ? `url(${new URL('/cloud-upload-outline.svg', import.meta.url).href})` : ''
 })
 const autoHeight = computed(() => {
   return files.value.length == 0 ? 'clamp(300px, 50vh, 500px)' : 'auto'
