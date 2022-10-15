@@ -20,11 +20,13 @@
             <v-divider></v-divider>
           </v-card-subtitle>
           <v-card-text>
-            <slot v-bind="props"></slot>
+            <text-chip v-for="item in items(filename)" :key="item.text" :label="item.label" :text="item.text" :disabled="!uploaded" />
           </v-card-text>
-          <v-card-actions v-show="!props.showAction">
+          <v-card-actions v-show="!uploaded">
             <v-spacer></v-spacer>
-            <slot name="action" v-bind="props"></slot>
+            <v-btn variant="tonal" color="deep-orange" class="me-2" @click="uploadImage(filename, fileblob)" :loading="uploading">
+              upload
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -33,9 +35,16 @@
 </template>
 
 <script setup lang="ts">
+import TextChip from '@/components/TextChip.vue'
+import blob2Base64 from '@/libs/blob2Base64'
+import { uploadFile } from '@/plugins/axios/file'
+import { repoPathContent } from '@/plugins/axios/repo'
+import { useCodeStore } from '@/plugins/stores/code'
+import { useSnackBarStore } from '@/plugins/stores/snackbar'
 import { useThemeStore } from '@/plugins/stores/theme'
+import { useUserStore } from '@/plugins/stores/user'
 import { storeToRefs } from 'pinia'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 const { type } = storeToRefs(useThemeStore())
 const isDark = computed(() => type.value == 'dark')
@@ -44,7 +53,6 @@ const props = defineProps<{
   filename: string
   filesize: number
   fileblob: File
-  showAction: boolean
 }>()
 const emit = defineEmits<{
   (event: 'delate'): void
@@ -61,6 +69,34 @@ const blob2Url = URL.createObjectURL(props.fileblob)
 const delEvent = () => {
   URL.revokeObjectURL(blob2Url)
   emit('delate')
+}
+
+// 获取 CDN 链接模板
+const { getCdnUrlItems } = storeToRefs(useCodeStore())
+const { name, repository, directory } = storeToRefs(useUserStore())
+const items = (filename: string) => {
+  return getCdnUrlItems.value(name.value, repository.value, directory.value, filename)
+}
+
+// 上传图片
+const uploaded = ref(false)
+const uploading = ref(false)
+const uploadImage = async (filename: string, fileblob: File) => {
+  uploading.value = true
+  try {
+    // 检查存储库中是否含有相同文件
+    await repoPathContent(name.value, repository.value, `${directory.value}/${filename}`)
+    uploaded.value = true
+    useSnackBarStore().showMessage('已经存在相同文件！', { timeout: 2000 })
+  } catch (error) {
+    try {
+      await uploadFile(name.value, repository.value, directory.value, filename, await blob2Base64(fileblob))
+      uploaded.value = true
+    } catch (error) {
+      console.error(error)
+    }
+  }
+  uploading.value = false
 }
 </script>
 
