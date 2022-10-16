@@ -20,7 +20,7 @@
         </transition>
       </router-view>
     </v-main>
-    <snack-bar />
+    <SnackBar />
   </v-layout>
 </template>
 

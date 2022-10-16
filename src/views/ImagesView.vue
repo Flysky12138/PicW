@@ -4,7 +4,7 @@
       <v-row v-if="files.length > 0">
         <transition-group name="slide-x-transition">
           <v-col cols="12" sm="6" md="4" v-for="(item, index) in files" :key="item.sha">
-            <cloud-image :item="item" @delete="delFile(item, index)" />
+            <CloudImage :item="item" @delete="delFile(item, index)" />
           </v-col>
         </transition-group>
       </v-row>

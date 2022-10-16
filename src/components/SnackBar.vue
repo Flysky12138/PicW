@@ -1,7 +1,7 @@
 <template>
   <v-snackbar v-model="show" v-bind="options">
     {{ content }}
-    <template v-slot:actions>
+    <template #actions>
       <v-btn color="blue" variant="text" @click="show = false"> Close </v-btn>
     </template>
   </v-snackbar>

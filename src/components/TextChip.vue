@@ -3,22 +3,22 @@
     label
     color="success"
     class="d-inline-block text-truncate link-copy w-100"
-    :text="props.text"
+    :text="text"
     v-copy="{
-      copyText: props.text,
-      prependText: `【 ${props.label} 】`
+      copyText: text,
+      prependText: `【 ${label} 】`
     }"
     @click="() => {}"
-    :disabled="props.disabled"
+    :disabled="disabled"
   >
     <template #prepend>
-      <v-chip label color="deep-orange" :text="props.label"></v-chip>
+      <v-chip label color="deep-orange" :text="label"></v-chip>
     </template>
   </v-chip>
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
+defineProps<{
   label: string
   text: string
   disabled?: boolean

@@ -1,11 +1,11 @@
 <template>
-  <prism-editor
+  <PrismEditor
     v-model="editorCode"
     :highlight="highlighter"
     line-numbers
     class="my-code rounded-lg elevation-3"
     @blur="onBlur"
-  ></prism-editor>
+  ></PrismEditor>
 </template>
 
 <script setup lang="ts">

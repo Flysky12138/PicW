@@ -2,7 +2,7 @@
   <v-container>
     <v-card variant="flat" class="mb-6" title="登录" prepend-icon="mdi-github">
       <v-card-text>
-        <user-section />
+        <UserSection />
       </v-card-text>
     </v-card>
     <v-card variant="flat" title="函数" prepend-icon="mdi-nodejs">
@@ -19,7 +19,7 @@
         </v-alert>
       </v-card-subtitle>
       <v-card-text>
-        <code-section v-model="fileName" />
+        <CodeSection v-model="fileName" />
       </v-card-text>
       <v-card-subtitle
         >导出的 CDN 链接
@@ -29,7 +29,7 @@
         </v-alert>
       </v-card-subtitle>
       <v-card-text>
-        <code-section v-model="cdnUrl" />
+        <CodeSection v-model="cdnUrl" />
       </v-card-text>
     </v-card>
   </v-container>

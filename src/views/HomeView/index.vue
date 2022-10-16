@@ -13,14 +13,14 @@
     >
       <template #selection="{ fileNames }">
         <transition-group name="slide-y-transition">
-          <image-section
+          <ImageSection
             v-for="(fileName, index) in fileNames"
             :key="fileName"
             :filename="getFileName(fileName, md5(fileName, String(files[index].size)))"
             :filesize="files[index].size"
             :fileblob="files[index]"
             @delate="removeItem(index)"
-          ></image-section>
+          ></ImageSection>
         </transition-group>
       </template>
     </v-file-input>

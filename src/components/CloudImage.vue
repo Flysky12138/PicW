@@ -1,12 +1,12 @@
 <template>
-  <v-hover v-slot="{ isHovering, props }">
+  <v-hover #default="{ isHovering, props }">
     <v-card v-bind="props" :elevation="isHovering ? 8 : 2" rounded="lg">
       <v-img :src="fileCdnUrls[0].text" height="200" cover>
         <v-expand-transition>
           <v-sheet v-show="isHovering" height="100%">
             <v-card variant="tonal" rounded="0" height="100%">
               <v-card-title>
-                <v-chip size="small" label color="primary" class="mr-2" :text="_props.item.name"></v-chip>
+                <v-chip size="small" label color="primary" class="mr-2" :text="item.name"></v-chip>
                 <v-btn
                   variant="tonal"
                   position="absolute"
@@ -14,7 +14,7 @@
                   prepend-icon="mdi-trash-can-outline"
                   color="error"
                   rounded="0"
-                  @click="emit('delete')"
+                  @click="$emit('delete')"
                 >
                   del
                 </v-btn>
@@ -47,15 +47,15 @@ import { useUserStore } from '@/plugins/stores/user'
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 
-const _props = defineProps<{
+const props = defineProps<{
   item: RepoPathContent
 }>()
-const emit = defineEmits<{
+defineEmits<{
   (event: 'delete'): void
 }>()
 
 // 获取 CDN
 const { name, repository } = storeToRefs(useUserStore())
 const { getCdnUrlItems } = storeToRefs(useCodeStore())
-const fileCdnUrls = computed(() => getCdnUrlItems.value(name.value, repository.value, '', _props.item.path))
+const fileCdnUrls = computed(() => getCdnUrlItems.value(name.value, repository.value, '', props.item.path))
 </script>

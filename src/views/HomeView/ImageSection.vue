@@ -2,7 +2,7 @@
   <v-container @click.stop>
     <v-row no-gutters class="rounded overflow-hidden">
       <v-col cols="12" sm="4">
-        <v-hover v-slot="{ isHovering, props }">
+        <v-hover #default="{ isHovering, props }">
           <v-img v-bind="props" :src="blob2Url" height="180" cover :class="isDark ? 'bg-grey-darken-1' : 'bg-grey-lighten-2'">
             <v-overlay :model-value="isHovering" contained class="align-center justify-center">
               <v-btn color="cyan" variant="flat" icon="mdi-close" @click="delEvent"></v-btn>
@@ -20,13 +20,11 @@
             <v-divider></v-divider>
           </v-card-subtitle>
           <v-card-text>
-            <text-chip v-for="item in items(filename)" :key="item.text" :label="item.label" :text="item.text" :disabled="!uploaded" />
+            <TextChip v-for="item in items(filename)" :key="item.text" :label="item.label" :text="item.text" :disabled="!uploaded" />
           </v-card-text>
           <v-card-actions v-show="!uploaded">
             <v-spacer></v-spacer>
-            <v-btn variant="tonal" color="deep-orange" class="me-2" @click="uploadImage(filename, fileblob)" :loading="uploading">
-              upload
-            </v-btn>
+            <v-btn variant="tonal" color="deep-orange" class="me-2" @click="uploadImage" :loading="uploading"> upload </v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -81,16 +79,16 @@ const items = (filename: string) => {
 // 上传图片
 const uploaded = ref(false)
 const uploading = ref(false)
-const uploadImage = async (filename: string, fileblob: File) => {
+const uploadImage = async () => {
   uploading.value = true
   try {
     // 检查存储库中是否含有相同文件
-    await repoPathContent(name.value, repository.value, `${directory.value}/${filename}`)
+    await repoPathContent(name.value, repository.value, `${directory.value}/${props.filename}`)
     uploaded.value = true
     useSnackBarStore().showMessage('已经存在相同文件！', { timeout: 2000 })
   } catch (error) {
     try {
-      await uploadFile(name.value, repository.value, directory.value, filename, await blob2Base64(fileblob))
+      await uploadFile(name.value, repository.value, directory.value, props.filename, await blob2Base64(props.fileblob))
       uploaded.value = true
     } catch (error) {
       console.error(error)
