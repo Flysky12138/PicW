@@ -5,9 +5,10 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/Flysky12138/PicW)
 [![GitHub license](https://img.shields.io/github/license/Flysky12138/PicW)](https://github.com/Flysky12138/PicW/blob/master/LICENSE)
 
-## 使用
+## 预览
 
-Vercel 构建预览地址：[https://picw.vercel.app/](https://picw.vercel.app/)
+![setting](https://cdn.jsdelivr.net/gh/Flysky12138/warehouse/PicW/picw/0d6a297e1449500b7b65421638893337.webp)
+![images](https://cdn.jsdelivr.net/gh/Flysky12138/warehouse//PicW/picw/633abad24cdbabe5c75a30c08ad50ca1.gif)
 
 ## 安装
 
