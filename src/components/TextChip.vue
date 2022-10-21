@@ -1,20 +1,26 @@
 <template>
-  <v-chip
-    label
-    color="success"
-    class="d-inline-block text-truncate link-copy w-100"
-    :text="text"
-    v-copy="{
-      copyText: text,
-      prependText: `【 ${label} 】`
-    }"
-    @click="() => {}"
-    :disabled="disabled"
-  >
-    <template #prepend>
-      <v-chip label color="deep-orange" :text="label"></v-chip>
+  <v-tooltip open-on-hover open-delay="500" location="end center">
+    <template #activator="{ props }">
+      <v-chip
+        v-bind="props"
+        label
+        color="success"
+        class="d-inline-block text-truncate link-copy w-100"
+        :text="text"
+        v-copy="{
+          copyText: text,
+          prependText: `【 ${label} 】`
+        }"
+        @click="() => {}"
+        :disabled="disabled"
+      >
+        <template #prepend>
+          <v-chip label color="deep-orange" :text="label"></v-chip>
+        </template>
+      </v-chip>
     </template>
-  </v-chip>
+    <span>{{ text }}</span>
+  </v-tooltip>
 </template>
 
 <script setup lang="ts">
