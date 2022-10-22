@@ -7,6 +7,14 @@
             <v-card variant="tonal" rounded="0" height="100%">
               <v-card-title>
                 <v-chip size="small" label color="primary" class="mr-2" :text="item.name"></v-chip>
+              </v-card-title>
+              <v-card-subtitle>
+                <v-divider></v-divider>
+              </v-card-subtitle>
+              <v-card-text class="h-100 overflow-y-auto" style="overscroll-behavior-y: contain">
+                <TextChip v-for="chip in fileCdnUrls" :key="chip.label" :label="chip.label" :text="chip.text" />
+              </v-card-text>
+              <v-card-actions>
                 <v-btn
                   variant="tonal"
                   position="absolute"
@@ -18,14 +26,7 @@
                 >
                   del
                 </v-btn>
-              </v-card-title>
-              <v-card-subtitle>
-                <v-divider></v-divider>
-              </v-card-subtitle>
-              <v-card-text>
-                <TextChip v-for="chip in fileCdnUrls" :key="chip.label" :label="chip.label" :text="chip.text" />
-              </v-card-text>
-              <v-card-actions> </v-card-actions>
+              </v-card-actions>
             </v-card>
           </v-sheet>
         </v-expand-transition>
