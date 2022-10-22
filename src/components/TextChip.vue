@@ -1,5 +1,5 @@
 <template>
-  <v-tooltip open-on-hover open-delay="500" location="end center">
+  <v-tooltip open-on-hover open-delay="500" location="top center" origin="overlap" scroll-strategy="close">
     <template #activator="{ props }">
       <v-chip
         v-bind="props"
@@ -19,7 +19,7 @@
         </template>
       </v-chip>
     </template>
-    <span>{{ text }}</span>
+    <span class="word-wrap">{{ text }}</span>
   </v-tooltip>
 </template>
 
@@ -44,5 +44,8 @@ defineProps<{
       border-start-end-radius: 0;
     }
   }
+}
+.word-wrap {
+  word-wrap: break-word;
 }
 </style>
