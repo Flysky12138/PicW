@@ -1,15 +1,26 @@
+import type { Ref } from 'vue'
 import axios from './api'
 
 /**
  * @see https://docs.github.com/en/rest/repos/contents#create-or-update-file-contents
  * @description 在存储库中创建一个新文件
  */
-const uploadFile = async (owner: string, repo: string, path: string, filename: string, content: string) => {
+const uploadFile = async (owner: string, repo: string, path: string, filename: string, content: string, progress?: Ref<number>) => {
   try {
-    const { data } = await axios.put(`/repos/${owner}/${repo}/contents/${path}/${filename}`, {
-      content,
-      message: `Upload ${filename} by PicW - ${new Date().toLocaleString()}`
-    })
+    const { data } = await axios.put(
+      `/repos/${owner}/${repo}/contents/${path}/${filename}`,
+      {
+        content,
+        message: `Upload ${filename} by PicW - ${new Date().toLocaleString()}`
+      },
+      {
+        onUploadProgress: progressEvent => {
+          if (progress) {
+            progress.value = ((progressEvent.loaded / (progressEvent.total || Number.MAX_VALUE)) * 100) >> 0
+          }
+        }
+      }
+    )
     return data
   } catch (error) {
     return Promise.reject(error)

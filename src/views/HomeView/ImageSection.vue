@@ -24,7 +24,12 @@
           </v-card-text>
           <v-card-actions v-show="!uploaded">
             <v-spacer></v-spacer>
-            <v-btn variant="tonal" color="deep-orange" class="me-2" @click="uploadImage" :loading="uploading"> upload </v-btn>
+            <v-btn variant="tonal" color="deep-orange" class="me-2" @click="uploadImage" :loading="uploading">
+              upload
+              <template #loader>
+                <v-progress-circular :model-value="progress" color="teal"> {{ progress }} </v-progress-circular>
+              </template>
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -79,6 +84,7 @@ const items = (filename: string) => {
 // 上传图片
 const uploaded = ref(false)
 const uploading = ref(false)
+const progress = ref(0)
 const uploadImage = async () => {
   uploading.value = true
   try {
@@ -88,7 +94,7 @@ const uploadImage = async () => {
     useSnackBarStore().showMessage('已经存在相同文件！', { timeout: 2000 })
   } catch (error) {
     try {
-      await uploadFile(name.value, repository.value, directory.value, props.filename, await blob2Base64(props.fileblob))
+      await uploadFile(name.value, repository.value, directory.value, props.filename, await blob2Base64(props.fileblob), progress)
       uploaded.value = true
     } catch (error) {
       console.error(error)
