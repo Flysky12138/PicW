@@ -3,7 +3,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 export default VitePWA({
   registerType: 'autoUpdate',
   workbox: {
-    globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+    globPatterns: ['**/*.{js,css,html}', '**/*.{jpg,jpeg,png,gif,webp,tiff,bmp,heif,svg,eps,psd,ai,xcf,raw,ico}']
   },
   devOptions: {
     enabled: true
