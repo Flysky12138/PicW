@@ -27,17 +27,15 @@ const repoPathContent = async (owner: string, repo: string, path = '') => {
 const repoContent = async (owner: string, repo: string, path = '', flat = false) => {
   try {
     const result = await repoPathContent(owner, repo, path)
-    const childrenResult: RepoPathContent[] = []
     for (let index = 0; index < result.length; index++) {
       if (result[index].type == 'dir') {
         if (flat) {
-          childrenResult.push(...(await repoContent(owner, repo, result[index].path)))
+          result.push(...(await repoContent(owner, repo, result[index].path)))
         } else {
           result[index].children = await repoContent(owner, repo, result[index].path)
         }
       }
     }
-    result.push(...childrenResult)
     return result
   } catch (error) {
     return Promise.reject(error)
