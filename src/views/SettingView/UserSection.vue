@@ -116,7 +116,7 @@ const checkUserToken = async () => {
   tokenInputLoading.value = true
   try {
     await userToken(token.value)
-    reposData()
+    await reposData()
   } catch (error) {
     console.error(error)
     token.value = ''
