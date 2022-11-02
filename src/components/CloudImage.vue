@@ -12,7 +12,7 @@
                 <v-divider></v-divider>
               </v-card-subtitle>
               <v-card-text class="h-100 overflow-y-auto" style="overscroll-behavior-y: contain">
-                <TextChip v-for="chip in fileCdnUrls" :key="chip.label" :label="chip.label" :text="chip.text" />
+                <TextChip v-for="chip in fileCdnUrls" :key="chip.label" :label="chip.label" :text="formatUrl(chip.text)" />
               </v-card-text>
               <v-card-actions>
                 <v-btn
@@ -42,6 +42,7 @@
 
 <script setup lang="ts">
 import TextChip from '@/components/TextChip.vue'
+import formatUrl from '@/libs/formatUrl'
 import type { RepoPathContent } from '@/plugins/axios/repo'
 import { useCodeStore } from '@/plugins/stores/code'
 import { useUserStore } from '@/plugins/stores/user'
@@ -58,5 +59,8 @@ defineEmits<{
 // 获取 CDN
 const { name, repository } = storeToRefs(useUserStore())
 const { getCdnUrlItems } = storeToRefs(useCodeStore())
-const fileCdnUrls = computed(() => getCdnUrlItems.value(name.value, repository.value, '', props.item.path))
+const fileCdnUrls = computed(() => {
+  const directory = props.item.path.match(/(.*)\/.*$/)
+  return getCdnUrlItems.value(name.value, repository.value, directory?.[1] ?? '/', props.item.name)
+})
 </script>

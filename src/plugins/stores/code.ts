@@ -1,3 +1,4 @@
+import formatUrl from '@/libs/formatUrl'
 import type { textChip } from 'env'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
@@ -33,7 +34,7 @@ const storeSetup = () => {
       return (username, repository, directory, filename) => [
         {
           label: 'jsDelivr',
-          text: `https://cdn.jsdelivr.net/gh/${username}/${repository}/${directory}/${filename}`.replaceAll(/(?<!:)\/{2,}/g, '/')
+          text: formatUrl(`https://cdn.jsdelivr.net/gh/${username}/${repository}/${directory}/${filename}`)
         }
       ]
     }
