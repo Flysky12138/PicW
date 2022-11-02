@@ -3,7 +3,22 @@ import { VitePWA } from 'vite-plugin-pwa'
 export default VitePWA({
   registerType: 'autoUpdate',
   workbox: {
-    globPatterns: ['**/*.{js,css,html}', '**/*.{jpg,jpeg,png,gif,webp,tiff,bmp,heif,svg,eps,psd,ai,xcf,raw,ico}']
+    runtimeCaching: [
+      {
+        urlPattern: ({ request }) => request.destination == 'image',
+        handler: 'CacheFirst',
+        options: {
+          cacheName: 'image-cache'
+        }
+      },
+      {
+        urlPattern: ({ request }) => request.destination == 'font',
+        handler: 'CacheFirst',
+        options: {
+          cacheName: 'font-cache'
+        }
+      }
+    ]
   },
   devOptions: {
     enabled: true
