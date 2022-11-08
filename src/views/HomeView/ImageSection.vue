@@ -14,7 +14,7 @@
         <v-card class="h-100" variant="tonal" rounded="0">
           <v-card-title>
             <v-chip size="small" label color="primary" class="mr-2" :text="filename"></v-chip>
-            <v-chip size="small" label color="primary" class="mr-2" :text="fileSizeFormat"></v-chip>
+            <v-chip size="small" label color="primary" class="mr-2" :text="filesize(props.filesize)"></v-chip>
           </v-card-title>
           <v-card-subtitle>
             <v-divider></v-divider>
@@ -40,6 +40,7 @@
 <script setup lang="ts">
 import TextChip from '@/components/TextChip.vue'
 import blob2Base64 from '@/libs/blob2Base64'
+import filesize from '@/libs/filesize'
 import { uploadFile } from '@/plugins/axios/file'
 import { repoPathContent } from '@/plugins/axios/repo'
 import { useCodeStore } from '@/plugins/stores/code'
@@ -60,12 +61,6 @@ const props = defineProps<{
 const emit = defineEmits<{
   (event: 'delate'): void
 }>()
-
-// 图片大小
-const M = 1024 * 1024
-const fileSizeFormat = computed(() => {
-  return props.filesize < M ? `${(props.filesize / 1024).toFixed(2)} K` : `${(props.filesize / M).toFixed(2)} M`
-})
 
 // 图片链接
 const blob2Url = URL.createObjectURL(props.fileblob)
