@@ -22,7 +22,7 @@
                       preview
                       <v-dialog v-model="dialog" activator="parent" fullscreen transition="scale-transition">
                         <v-card color="rgb(0 0 0 / 75%)" style="backdrop-filter: blur(10px)">
-                          <v-card-text class="overflow-hidden d-flex justify-center align-center pa-12" @click="dialog = false">
+                          <v-card-text class="overflow-hidden d-flex justify-center align-center pa-sm-12" @click="dialog = false">
                             <v-img :src="fileCdnUrls[0].text"></v-img>
                           </v-card-text>
                         </v-card>
