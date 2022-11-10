@@ -1,8 +1,9 @@
-import { VitePWA } from 'vite-plugin-pwa'
+import type { VitePWAOptions } from 'vite-plugin-pwa'
 
-export default VitePWA({
+const pwaConfig: Partial<VitePWAOptions> = {
   registerType: 'autoUpdate',
   workbox: {
+    navigateFallback: null,
     runtimeCaching: [
       {
         urlPattern: ({ request }) => request.destination == 'image',
@@ -41,4 +42,6 @@ export default VitePWA({
       }
     ]
   }
-})
+}
+
+export default pwaConfig
