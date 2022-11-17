@@ -23,7 +23,7 @@ import { deleteFile } from '@/plugins/axios/file'
 import { repoContent, type RepoPathContent } from '@/plugins/axios/repo'
 import { useUserStore } from '@/plugins/stores/user'
 import { storeToRefs } from 'pinia'
-import { onActivated, onMounted, ref } from 'vue'
+import { onActivated, ref } from 'vue'
 
 const { name, repository, directory } = storeToRefs(useUserStore())
 
@@ -48,6 +48,5 @@ const delFile = async (item: RepoPathContent, index: number) => {
   }
 }
 
-onMounted(getFilesContent)
 onActivated(getFilesContent)
 </script>
