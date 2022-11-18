@@ -4,7 +4,13 @@
       <v-row v-if="files.length > 0">
         <transition-group name="slide-x-transition">
           <v-col cols="12" sm="6" md="4" v-for="(item, index) in files" :key="item.sha">
-            <CloudImage :item="item" @delete="delFile(item, index)" :name="name" :repository="repository" :directory="directory" />
+            <CloudImage
+              :item="item"
+              :name="search.name"
+              :repository="search.repository"
+              :directory="search.directory"
+              @delete="delFile(item, index)"
+            />
           </v-col>
         </transition-group>
       </v-row>
@@ -22,40 +28,50 @@ import CloudImage from '@/components/CloudImage.vue'
 import { deleteFile } from '@/plugins/axios/file'
 import { repoContent, type RepoPathContent } from '@/plugins/axios/repo'
 import { useUserStore } from '@/plugins/stores/user'
-import { onActivated, ref } from 'vue'
+import { onActivated, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
-const { query, meta, path } = useRoute()
-let { name, repository, directory } = useUserStore()
-if (meta.querySuccess) {
-  name = query.name as string
-  repository = query.repository as string
-  directory = query.directory as string
-}
-
-// 获取文件
+const search = reactive({
+  name: '',
+  repository: '',
+  directory: ''
+})
 const files = ref<RepoPathContent[]>([])
-const getFilesContent = async () => {
-  try {
-    const data = await repoContent(name, repository, directory, true)
-    files.value = data.filter(value => value.type == 'file')
-    if (!meta.querySuccess) {
-      history.replaceState(history.state, '', `${path}?${new URLSearchParams({ name, repository, directory }).toString()}`)
-    }
-  } catch (error) {
-    console.error(error)
-  }
-}
 
 // 删除文件
 const delFile = async (item: RepoPathContent, index: number) => {
   try {
-    await deleteFile(name, repository, item.path, item.name, item.sha)
+    await deleteFile(search.name, search.repository, item.path, item.name, item.sha)
     files.value.splice(index, 1)
   } catch (error) {
     console.error(error)
   }
 }
 
-onActivated(getFilesContent)
+// 获取文件
+onActivated(async () => {
+  const user = useUserStore()
+  search.name = user.name
+  search.repository = user.repository
+  search.directory = user.directory
+  const { meta, query, path } = useRoute()
+  if (meta.querySuccess) {
+    search.name = query.name as string
+    search.repository = query.repository as string
+    search.directory = query.directory as string
+  }
+  try {
+    const data = await repoContent(search.name, search.repository, search.directory, true)
+    files.value = data.filter(value => value.type == 'file')
+    if (!meta.querySuccess) {
+      history.replaceState(
+        history.state,
+        '',
+        `${path}?${new URLSearchParams({ name: search.name, repository: search.repository, directory: search.directory }).toString()}`
+      )
+    }
+  } catch (error) {
+    console.error(error)
+  }
+})
 </script>
