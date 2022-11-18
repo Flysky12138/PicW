@@ -27,7 +27,6 @@
 import CloudImage from '@/components/CloudImage.vue'
 import { deleteFile } from '@/plugins/axios/file'
 import { repoContent, type RepoPathContent } from '@/plugins/axios/repo'
-import { useUserStore } from '@/plugins/stores/user'
 import { onActivated, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
@@ -50,26 +49,13 @@ const delFile = async (item: RepoPathContent, index: number) => {
 
 // 获取文件
 onActivated(async () => {
-  const user = useUserStore()
-  search.name = user.name
-  search.repository = user.repository
-  search.directory = user.directory
-  const { meta, query, path } = useRoute()
-  if (meta.querySuccess) {
-    search.name = query.name as string
-    search.repository = query.repository as string
-    search.directory = query.directory as string
-  }
+  const { query } = useRoute()
+  search.name = query.name as string
+  search.repository = query.repository as string
+  search.directory = query.directory as string
   try {
     const data = await repoContent(search.name, search.repository, search.directory, true)
     files.value = data.filter(value => value.type == 'file')
-    if (!meta.querySuccess) {
-      history.replaceState(
-        history.state,
-        '',
-        `${path}?${new URLSearchParams({ name: search.name, repository: search.repository, directory: search.directory }).toString()}`
-      )
-    }
   } catch (error) {
     console.error(error)
   }

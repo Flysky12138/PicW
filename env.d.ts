@@ -5,7 +5,6 @@ declare module 'vue-router' {
   interface RouteMeta {
     keepAlive?: boolean
     requiresAuth?: boolean
-    querySuccess?: boolean
   }
 }
 

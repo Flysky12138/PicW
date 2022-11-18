@@ -12,7 +12,7 @@
       <router-view #default="{ Component, route }">
         <transition name="router-transition">
           <keep-alive>
-            <component v-if="route.meta.keepAlive" :is="Component" :key="route.fullPath" />
+            <component v-if="route.meta.keepAlive" :is="Component" :key="route.path" />
           </keep-alive>
         </transition>
         <transition name="router-transition">

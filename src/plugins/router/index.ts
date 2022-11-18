@@ -9,14 +9,16 @@ const router = createRouter({
 })
 
 router.beforeEach(to => {
+  const { islogin, name, repository, directory } = useUserStore()
   if (to.path == '/images') {
     const keys = Object.keys(to.query)
     if (['name', 'repository', 'directory'].every(val => keys.includes(val))) {
-      to.meta.querySuccess = true
       return true
+    } else if (islogin) {
+      return Object.assign(to, { query: { name, repository, directory } })
     }
   }
-  if (to.meta.requiresAuth && !useUserStore().islogin) {
+  if (to.meta.requiresAuth && !islogin) {
     useSnackBarStore().showMessage('需要登录才能访问其他页面！', {
       location: 'end bottom',
       vertical: true,
