@@ -4,7 +4,7 @@
       <v-row v-if="files.length > 0">
         <transition-group name="slide-x-transition">
           <v-col cols="12" sm="6" md="4" v-for="(item, index) in files" :key="item.sha">
-            <CloudImage :item="item" @delete="delFile(item, index)" />
+            <CloudImage :item="item" @delete="delFile(item, index)" :name="name" :repository="repository" :directory="directory" />
           </v-col>
         </transition-group>
       </v-row>
@@ -22,17 +22,27 @@ import CloudImage from '@/components/CloudImage.vue'
 import { deleteFile } from '@/plugins/axios/file'
 import { repoContent, type RepoPathContent } from '@/plugins/axios/repo'
 import { useUserStore } from '@/plugins/stores/user'
-import { storeToRefs } from 'pinia'
 import { onActivated, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
-const { name, repository, directory } = storeToRefs(useUserStore())
+const { query, meta, path } = useRoute()
+const { replace } = useRouter()
+let { name, repository, directory } = useUserStore()
+if (meta.querySuccess) {
+  name = query.name as string
+  repository = query.repository as string
+  directory = query.directory as string
+}
 
 // 获取文件
 const files = ref<RepoPathContent[]>([])
 const getFilesContent = async () => {
   try {
-    const data = await repoContent(name.value, repository.value, directory.value, true)
+    const data = await repoContent(name, repository, directory, true)
     files.value = data.filter(value => value.type == 'file')
+    if (!meta.querySuccess) {
+      replace(`${path}?${new URLSearchParams({ name, repository, directory }).toString()}`)
+    }
   } catch (error) {
     console.error(error)
   }
@@ -41,7 +51,7 @@ const getFilesContent = async () => {
 // 删除文件
 const delFile = async (item: RepoPathContent, index: number) => {
   try {
-    await deleteFile(name.value, repository.value, item.path, item.name, item.sha)
+    await deleteFile(name, repository, item.path, item.name, item.sha)
     files.value.splice(index, 1)
   } catch (error) {
     console.error(error)

@@ -8,7 +8,14 @@
               <v-card-title>
                 <v-row>
                   <v-col cols="5">
-                    <v-btn block variant="tonal" prepend-icon="mdi-trash-can-outline" color="secondary" @click="$emit('delete')">
+                    <v-btn
+                      :disabled="!islogin"
+                      block
+                      variant="tonal"
+                      prepend-icon="mdi-trash-can-outline"
+                      color="secondary"
+                      @click="$emit('delete')"
+                    >
                       delete
                     </v-btn>
                   </v-col>
@@ -59,20 +66,20 @@ import { useUserStore } from '@/plugins/stores/user'
 import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
 
-const dialog = ref(false)
-
 const props = defineProps<{
   item: RepoPathContent
+  name: string
+  repository: string
+  directory: string
 }>()
 defineEmits<{
   (event: 'delete'): void
 }>()
 
+const dialog = ref(false)
+const { islogin } = storeToRefs(useUserStore())
+
 // 获取 CDN
-const { name, repository } = storeToRefs(useUserStore())
 const { getCdnUrlItems } = storeToRefs(useCodeStore())
-const fileCdnUrls = computed(() => {
-  const directory = props.item.path.match(/(.*)\/.*$/)
-  return getCdnUrlItems.value(name.value, repository.value, directory?.[1] ?? '/', props.item.name)
-})
+const fileCdnUrls = computed(() => getCdnUrlItems.value(props.name, props.repository, props.directory, props.item.name))
 </script>

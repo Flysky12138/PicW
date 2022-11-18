@@ -18,7 +18,8 @@ export default <readonly RouteRecordRaw[]>[
     component: () => import('@/views/ImagesView.vue'),
     meta: {
       keepAlive: true,
-      requiresAuth: true
+      requiresAuth: true,
+      querySuccess: false
     }
   },
   {
