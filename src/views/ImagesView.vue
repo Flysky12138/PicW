@@ -23,10 +23,9 @@ import { deleteFile } from '@/plugins/axios/file'
 import { repoContent, type RepoPathContent } from '@/plugins/axios/repo'
 import { useUserStore } from '@/plugins/stores/user'
 import { onActivated, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 
 const { query, meta, path } = useRoute()
-const { replace } = useRouter()
 let { name, repository, directory } = useUserStore()
 if (meta.querySuccess) {
   name = query.name as string
@@ -41,7 +40,7 @@ const getFilesContent = async () => {
     const data = await repoContent(name, repository, directory, true)
     files.value = data.filter(value => value.type == 'file')
     if (!meta.querySuccess) {
-      replace(`${path}?${new URLSearchParams({ name, repository, directory }).toString()}`)
+      history.replaceState(history.state, '', `${path}?${new URLSearchParams({ name, repository, directory }).toString()}`)
     }
   } catch (error) {
     console.error(error)
