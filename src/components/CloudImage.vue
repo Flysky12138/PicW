@@ -8,15 +8,18 @@
               <v-card-title>
                 <v-row>
                   <v-col cols="5">
-                    <v-btn
-                      :disabled="!islogin"
-                      block
-                      variant="tonal"
-                      prepend-icon="mdi-trash-can-outline"
-                      color="secondary"
-                      @click="$emit('delete')"
-                    >
+                    <v-btn :disabled="!islogin" block variant="tonal" prepend-icon="mdi-trash-can-outline" color="secondary">
                       delete
+                      <v-dialog v-model="dialog.delete" activator="parent" persistent>
+                        <v-card min-width="250" width="25vw" class="mx-auto">
+                          <v-card-text> 确认删除？ </v-card-text>
+                          <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="warning" variant="text" @click="dialog.delete = false"> 取消 </v-btn>
+                            <v-btn color="success" variant="text" @click="$emit('delete')"> 确认 </v-btn>
+                          </v-card-actions>
+                        </v-card>
+                      </v-dialog>
                     </v-btn>
                   </v-col>
                   <v-col cols="2">
@@ -27,9 +30,9 @@
                   <v-col cols="5">
                     <v-btn block variant="tonal" prepend-icon="mdi-image-search-outline" color="secondary">
                       preview
-                      <v-dialog v-model="dialog" activator="parent" fullscreen transition="scale-transition">
+                      <v-dialog v-model="dialog.preview" activator="parent" fullscreen transition="scale-transition">
                         <v-card color="rgb(0 0 0 / 75%)" style="backdrop-filter: blur(10px)">
-                          <v-card-text class="overflow-hidden d-flex justify-center align-center pa-sm-12" @click="dialog = false">
+                          <v-card-text class="overflow-hidden d-flex justify-center align-center pa-sm-12" @click="dialog.preview = false">
                             <v-img :src="fileCdnUrls[0].text"></v-img>
                           </v-card-text>
                         </v-card>
@@ -64,7 +67,7 @@ import type { RepoPathContent } from '@/plugins/axios/repo'
 import { useCodeStore } from '@/plugins/stores/code'
 import { useUserStore } from '@/plugins/stores/user'
 import { storeToRefs } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, reactive } from 'vue'
 
 const props = defineProps<{
   item: RepoPathContent
@@ -76,7 +79,10 @@ defineEmits<{
   (event: 'delete'): void
 }>()
 
-const dialog = ref(false)
+const dialog = reactive({
+  delete: false,
+  preview: false
+})
 const { islogin } = storeToRefs(useUserStore())
 
 // 获取 CDN
