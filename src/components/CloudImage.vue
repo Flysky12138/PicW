@@ -1,7 +1,7 @@
 <template>
   <v-hover #default="{ isHovering, props }">
     <v-card v-bind="props" :elevation="isHovering ? 8 : 2" rounded="lg">
-      <v-img :src="fileCdnUrls[0].text" height="200" cover>
+      <v-img :src="fileCdnUrls[0].text" height="200" cover ref="cloudImage" @error="reload">
         <v-expand-transition>
           <v-sheet v-show="isHovering" height="100%">
             <v-card variant="tonal" rounded="0" height="100%">
@@ -67,7 +67,8 @@ import type { RepoPathContent } from '@/plugins/axios/repo'
 import { useCodeStore } from '@/plugins/stores/code'
 import { useUserStore } from '@/plugins/stores/user'
 import { storeToRefs } from 'pinia'
-import { computed, reactive } from 'vue'
+import { computed, reactive, ref } from 'vue'
+import type { VImg } from 'vuetify/components/VImg'
 
 const props = defineProps<{
   item: RepoPathContent
@@ -88,4 +89,19 @@ const { islogin } = storeToRefs(useUserStore())
 // 获取 CDN
 const { getCdnUrlItems } = storeToRefs(useCodeStore())
 const fileCdnUrls = computed(() => getCdnUrlItems.value(props.name, props.repository, props.directory, props.item.name))
+
+// 加载错误
+const cloudImage = ref<VImg>()
+const errorTimes = ref(5)
+const reload = () => {
+  if (errorTimes.value > 0) {
+    cloudImage.value!.state = 'idle'
+    setTimeout(() => {
+      cloudImage.value!.state = 'loading'
+    }, 1000)
+  } else {
+    cloudImage.value!.state = 'loaded'
+  }
+  errorTimes.value--
+}
 </script>
