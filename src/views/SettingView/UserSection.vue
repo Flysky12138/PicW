@@ -71,6 +71,7 @@
         hide-no-data
         append-icon="mdi-refresh"
         @click:append="dirsData"
+        @blur="formatDir"
         :loading="dirsInputLoading"
         :disabled="!repository"
       ></v-combobox>
@@ -160,5 +161,14 @@ const dirsData = async () => {
     console.error(error)
   }
   dirsInputLoading.value = false
+}
+// 格式化路径
+const formatDir = () => {
+  directory.value =
+    directory.value
+      .trim()
+      .replaceAll(/\\+/g, '/')
+      .replaceAll(/\/{2,}/g, '/')
+      .replaceAll(/^\/|\/$/g, '') || '/'
 }
 </script>

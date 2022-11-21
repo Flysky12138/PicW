@@ -3,7 +3,7 @@
     <v-fade-transition hide-on-leave>
       <v-row v-if="files.length > 0">
         <transition-group name="slide-x-transition">
-          <v-col cols="12" key="readme" v-show="readmeText">
+          <v-col cols="12" :key="readmeText" v-show="readmeText">
             <v-hover #default="{ isHovering, props }">
               <v-card v-bind="props" :elevation="isHovering ? 8 : 2" rounded="lg" class="px-5 markdown-content">
                 <v-btn v-if="islogin" icon flat size="30" position="absolute" style="right: 0; top: 0" :href="editHref" target="_blank">
@@ -75,12 +75,35 @@ onActivated(async () => {
   search.repository = query.repository as string
   search.directory = query.directory as string
   try {
-    // 获取 markdown 文件内容
-    const readmeUrl = getCdnUrlItems.value(search.name, search.repository, search.directory, 'README.md')[0].text
-    readmeText.value = await fetch(readmeUrl).then(val => (val.ok ? val.text() : ''))
     // 获取文件
     const data = await repoContent(search.name, search.repository, search.directory, true)
-    files.value = data.filter(value => value.type == 'file')
+    const Suffix = [
+      'tif',
+      'jfif',
+      'pjp',
+      'apng',
+      'ico',
+      'tiff',
+      'gif',
+      'svg',
+      'xbm',
+      'jxl',
+      'jpeg',
+      'svgz',
+      'jpg',
+      'webp',
+      'png',
+      'bmp',
+      'pjpeg',
+      'avif'
+    ]
+    files.value = data.filter(val => val.type == 'file' && Suffix.some(suffix => val.name.toLowerCase().endsWith(suffix)))
+    // 获取 markdown 文件内容
+    const readmeItem = data.find(val => val.name.toLowerCase().endsWith('.md') && val.path == `${search.directory}/${val.name}`)
+    if (readmeItem) {
+      const readmeUrl = getCdnUrlItems.value(search.name, search.repository, search.directory, readmeItem.name)[0].text
+      readmeText.value = await fetch(readmeUrl).then(val => (val.ok ? val.text() : ''))
+    }
   } catch (error) {
     console.error(error)
   }
