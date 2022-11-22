@@ -92,6 +92,7 @@ const uploadImage = async () => {
       await uploadFile(name.value, repository.value, directory.value, props.filename, await blob2Base64(props.fileblob), progress)
       uploaded.value = true
     } catch (error) {
+      progress.value = 0
       console.error(error)
     }
   }
