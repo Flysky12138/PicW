@@ -1,7 +1,7 @@
 <template>
   <v-hover #default="{ isHovering, props }">
     <v-card v-bind="props" :elevation="isHovering ? 8 : 2" rounded="lg">
-      <v-img :src="fileCdnUrls[0].text" height="200" cover ref="cloudImage" @error="reload">
+      <v-img v-if="item.type == 'file'" :src="fileCdnUrls[0].text" height="200" cover ref="cloudImage" @error="reload">
         <v-expand-transition>
           <v-sheet v-show="isHovering" height="100%">
             <v-card variant="tonal" rounded="0" height="100%">
@@ -52,10 +52,16 @@
         </v-expand-transition>
         <template #placeholder>
           <div class="d-flex align-center justify-center fill-height">
-            <v-progress-circular indeterminate color="grey-lighten-4"></v-progress-circular>
+            <v-progress-circular indeterminate :color="errorTimes == 5 ? 'grey-lighten-4' : 'error'">
+              <div v-show="errorTimes < 5">{{ errorTimes }}</div>
+            </v-progress-circular>
           </div>
         </template>
       </v-img>
+      <v-sheet v-else height="200" class="d-flex flex-column justify-center align-center" @click="toChildPath(item.path)">
+        <v-card-title class="text-subtitle-1 text-medium-emphasis" style="position: absolute; top: 0"> {{ item.name }} </v-card-title>
+        <v-icon icon="mdi-folder-multiple-image" size="80" class="mx-auto text-disabled"></v-icon>
+      </v-sheet>
     </v-card>
   </v-hover>
 </template>
@@ -68,6 +74,7 @@ import { useCodeStore } from '@/plugins/stores/code'
 import { useUserStore } from '@/plugins/stores/user'
 import { storeToRefs } from 'pinia'
 import { computed, reactive, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import type { VImg } from 'vuetify/components/VImg'
 
 const props = defineProps<{
@@ -103,5 +110,14 @@ const reload = () => {
     cloudImage.value!.state = 'loaded'
   }
   errorTimes.value--
+}
+
+// 进入子目录
+const { push } = useRouter()
+const { query } = useRoute()
+const toChildPath = (directory: string) => {
+  push({
+    query: Object.assign({}, query, { directory })
+  })
 }
 </script>
