@@ -6,7 +6,7 @@
 
 ## 预览
 
-[https://picw.vercel.app/images?name=komeiji-satori&repository=Dress&directory=/](https://picw.vercel.app/images?name=komeiji-satori&repository=Dress&directory=/)
+[https://picw.4everland.app/images?name=komeiji-satori&repository=Dress&directory=/](https://picw.4everland.app/images?name=komeiji-satori&repository=Dress&directory=/)
 
 ![setting](https://cdn.jsdelivr.net/gh/Flysky12138/warehouse/PicW/picw/0d6a297e1449500b7b65421638893337.webp)
 
