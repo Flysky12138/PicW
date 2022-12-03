@@ -1,5 +1,5 @@
 <template>
-  <v-layout @contextmenu.prevent v-scroll="onScroll">
+  <v-app @contextmenu.prevent v-scroll="onScroll">
     <v-app-bar :elevation="atTop ? 0 : 5" class="header">
       <v-btn :icon="type == 'dark' ? 'mdi-weather-night' : 'mdi-weather-sunny'" @click="type = type == 'dark' ? 'light' : 'dark'"></v-btn>
       <v-app-bar-title class="font-weight-bold">
@@ -21,7 +21,7 @@
       </router-view>
     </v-main>
     <SnackBar />
-  </v-layout>
+  </v-app>
 </template>
 
 <script setup lang="ts">
