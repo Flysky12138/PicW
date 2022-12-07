@@ -23,6 +23,9 @@ export default <readonly RouteRecordRaw[]>[
   },
   {
     path: '/setting',
-    component: () => import('@/views/SettingView/index.vue')
+    component: () => import('@/views/SettingView/index.vue'),
+    meta: {
+      keepAlive: true
+    }
   }
 ]
