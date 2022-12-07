@@ -1,8 +1,9 @@
 # PicW
 
 [![OSCS Status](https://www.oscs1024.com/platform/badge/Flysky12138/PicW.svg?size=small)](https://www.murphysec.com/dr/DPyZpGkNcCP12oul7S)
-[![GitHub last commit](https://img.shields.io/github/last-commit/Flysky12138/PicW)](https://github.com/Flysky12138/PicW/commits/master)
 [![GitHub license](https://img.shields.io/github/license/Flysky12138/PicW)](https://github.com/Flysky12138/PicW/blob/master/LICENSE)
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+[![GitHub last commit](https://img.shields.io/github/last-commit/Flysky12138/PicW)](https://github.com/Flysky12138/PicW/commits/master)
 
 ## 预览
 
