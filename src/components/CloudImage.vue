@@ -1,7 +1,7 @@
 <template>
   <v-hover #default="{ isHovering, props }">
     <v-card v-bind="props" :elevation="isHovering ? 8 : 2" rounded="lg">
-      <v-img v-if="item.type == 'file'" :src="fileCdnUrls[0].text" height="200" cover ref="cloudImage" @error="reload">
+      <v-img v-if="item.type == 'file'" :src="fileCdnUrls[0].text" height="200" cover ref="cloudImage" @error="imageLoadError">
         <v-expand-transition>
           <v-sheet v-show="isHovering" height="100%">
             <v-card variant="tonal" rounded="0" height="100%">
@@ -12,7 +12,7 @@
                       delete
                       <v-dialog v-model="dialog.delete" activator="parent" persistent>
                         <v-card min-width="250" width="25vw" class="mx-auto">
-                          <v-card-text> 确认删除？ </v-card-text>
+                          <v-card-text> 确认删除？</v-card-text>
                           <v-card-actions>
                             <v-spacer></v-spacer>
                             <v-btn color="warning" variant="text" @click="dialog.delete = false"> 取消 </v-btn>
@@ -23,8 +23,8 @@
                     </v-btn>
                   </v-col>
                   <v-col cols="2">
-                    <v-btn block variant="tonal" color="success" @click="download(fileCdnUrls[0].text, $props.item.name)">
-                      <v-icon icon="mdi-download"></v-icon>
+                    <v-btn block variant="tonal" color="success" @click="btnEvent">
+                      <v-icon :icon="errorTimes == maxErrorTimes ? 'mdi-refresh' : 'mdi-download'"></v-icon>
                     </v-btn>
                   </v-col>
                   <v-col cols="5">
@@ -52,8 +52,8 @@
         </v-expand-transition>
         <template #placeholder>
           <div class="d-flex align-center justify-center fill-height">
-            <v-progress-circular indeterminate :color="errorTimes == 5 ? 'grey-lighten-4' : 'error'">
-              <div v-show="errorTimes < 5">{{ errorTimes }}</div>
+            <v-progress-circular indeterminate :color="errorTimes == 0 ? 'grey-lighten-4' : 'error'">
+              <div v-show="errorTimes > 0">{{ errorTimes }}</div>
             </v-progress-circular>
           </div>
         </template>
@@ -97,19 +97,33 @@ const { islogin } = storeToRefs(useUserStore())
 const { getCdnUrlItems } = storeToRefs(useCodeStore())
 const fileCdnUrls = computed(() => getCdnUrlItems.value(props.name, props.repository, props.directory, props.item.name))
 
-// 加载错误
+// 重新加载
 const cloudImage = ref<VImg>()
-const errorTimes = ref(5)
-const reload = () => {
-  if (errorTimes.value > 0) {
-    cloudImage.value!.state = 'idle'
-    setTimeout(() => {
-      cloudImage.value!.state = 'loading'
-    }, 1000)
+const reloadImage = () => {
+  cloudImage.value!.state = 'idle'
+  setTimeout(() => {
+    cloudImage.value!.state = 'loading'
+  }, 1000)
+}
+// 加载错误
+const maxErrorTimes = 3
+const errorTimes = ref(0)
+const imageLoadError = () => {
+  if (errorTimes.value++ < maxErrorTimes) {
+    reloadImage()
   } else {
+    errorTimes.value--
     cloudImage.value!.state = 'loaded'
   }
-  errorTimes.value--
+}
+// 按键逻辑
+const btnEvent = () => {
+  if (errorTimes.value == maxErrorTimes) {
+    errorTimes.value = 0
+    reloadImage()
+  } else {
+    download(fileCdnUrls.value[0].text, props.item.name)
+  }
 }
 
 // 进入子目录
