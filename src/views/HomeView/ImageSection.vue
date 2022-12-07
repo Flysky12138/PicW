@@ -13,14 +13,14 @@
       <v-col cols="12" sm="8">
         <v-card class="h-100" variant="tonal" rounded="0">
           <v-card-title>
-            <v-chip size="small" label color="primary" class="mr-2" :text="filename"></v-chip>
+            <v-chip size="small" label color="primary" class="mr-2 chip-filename" :text="filename" contenteditable @keyup="keyUp"></v-chip>
             <v-chip size="small" label color="primary" class="mr-2" :text="filesize(props.filesize)"></v-chip>
           </v-card-title>
           <v-card-subtitle>
             <v-divider></v-divider>
           </v-card-subtitle>
           <v-card-text>
-            <TextChip v-for="item in items(filename)" :key="item.text" :label="item.label" :text="item.text" :disabled="!uploaded" />
+            <TextChip v-for="item in items(useName)" :key="item.text" :label="item.label" :text="item.text" :disabled="!uploaded" />
           </v-card-text>
           <v-card-actions v-show="!uploaded">
             <v-spacer></v-spacer>
@@ -62,6 +62,12 @@ const emit = defineEmits<{
   (event: 'delate'): void
 }>()
 
+// 文件名
+const useName = ref(props.filename)
+const keyUp = (e: KeyboardEvent) => {
+  useName.value = (e.target as HTMLSpanElement).textContent || props.filename
+}
+
 // 图片链接
 const blob2Url = URL.createObjectURL(props.fileblob)
 const delEvent = () => {
@@ -84,12 +90,12 @@ const uploadImage = async () => {
   uploading.value = true
   try {
     // 检查存储库中是否含有相同文件
-    await repoPathContent(name.value, repository.value, `${directory.value}/${props.filename}`)
+    await repoPathContent(name.value, repository.value, `${directory.value}/${useName.value}`)
     uploaded.value = true
     useSnackBarStore().showMessage('已经存在相同文件！', { timeout: 2000 })
   } catch (error) {
     try {
-      await uploadFile(name.value, repository.value, directory.value, props.filename, await blob2Base64(props.fileblob), progress)
+      await uploadFile(name.value, repository.value, directory.value, useName.value, await blob2Base64(props.fileblob), progress)
       uploaded.value = true
     } catch (error) {
       progress.value = 0
@@ -104,6 +110,20 @@ const uploadImage = async () => {
 :deep() {
   .v-card-title {
     white-space: normal;
+  }
+}
+.chip-filename {
+  caret-color: red;
+  outline: none;
+  &:focus {
+    border: 1px solid #5e35b1;
+    &::before {
+      color: red;
+    }
+  }
+  &::before {
+    content: '✎';
+    margin-right: 0.5em;
   }
 }
 </style>
