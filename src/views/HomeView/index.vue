@@ -10,6 +10,7 @@
       :clearable="false"
       multiple
       class="auto-height"
+      :key="forceUpdate"
     >
       <template #selection="{ fileNames }">
         <transition-group name="slide-y-transition">
@@ -34,8 +35,14 @@ import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
 import ImageSection from './ImageSection.vue'
 
+const forceUpdate = ref(Date.now())
 const files = ref<File[]>([])
-const removeItem = (index: number) => files.value.splice(index, 1)
+const removeItem = (index: number) => {
+  files.value.splice(index, 1)
+  if (files.value.length == 0) {
+    forceUpdate.value = Date.now()
+  }
+}
 
 const { getFileName } = storeToRefs(useCodeStore())
 
