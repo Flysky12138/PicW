@@ -26,13 +26,43 @@
 
 <script setup lang="ts">
 import SnackBar from '@/components/SnackBar.vue'
+import { useSnackBarStore } from '@/plugins/stores/snackbar'
 import { useThemeStore } from '@/plugins/stores/theme'
 import { storeToRefs } from 'pinia'
-import { ref } from 'vue'
+import { useRegisterSW } from 'virtual:pwa-register/vue'
+import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
-const { type } = storeToRefs(useThemeStore())
 const $router = useRouter()
+
+const { type } = storeToRefs(useThemeStore())
+const { showMessage } = useSnackBarStore()
+const { show } = storeToRefs(useSnackBarStore())
+
+// 更新提示
+const { needRefresh, updateServiceWorker } = useRegisterSW({
+  immediate: true,
+  onRegistered: r => r && setInterval(async () => await r.update(), 60 * 60 * 1000)
+})
+watch(needRefresh, () => {
+  showMessage(
+    '新内容可用，点击刷新！',
+    {
+      location: 'bottom right',
+      transition: 'slide-x-reverse-transition',
+      timeout: 10 * 1000,
+      vertical: true
+    },
+    {
+      text: '刷新',
+      event: () => {
+        updateServiceWorker().finally(() => {
+          show.value = false
+        })
+      }
+    }
+  )
+})
 
 const atTop = ref(true)
 const onScroll = (event: Event) => {

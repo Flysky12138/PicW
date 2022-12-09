@@ -2,7 +2,7 @@
   <v-snackbar v-model="show" v-bind="options">
     {{ content }}
     <template #actions>
-      <v-btn color="blue" variant="text" @click="show = false"> Close </v-btn>
+      <v-btn color="blue" variant="text" @click="handleClick.event">{{ handleClick.text }}</v-btn>
     </template>
   </v-snackbar>
 </template>
@@ -11,5 +11,5 @@
 import { useSnackBarStore } from '@/plugins/stores/snackbar'
 import { storeToRefs } from 'pinia'
 
-const { show, content, options } = storeToRefs(useSnackBarStore())
+const { show, content, options, handleClick } = storeToRefs(useSnackBarStore())
 </script>

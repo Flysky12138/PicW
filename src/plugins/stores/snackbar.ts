@@ -8,13 +8,25 @@ type SnackBarOptions = Pick<
   'color' | 'location' | 'position' | 'rounded' | 'timeout' | 'transition' | 'variant' | 'vertical' | 'contentClass'
 >
 
+interface handleClickType {
+  text: string
+  event: () => void
+}
+
 const storeSetup = () => {
   const show = ref(false)
   const content = ref('')
   const options: RemoveReadonly<SnackBarOptions> = reactive({})
+  const defaultHandleClick = {
+    text: 'Close',
+    event: () => {
+      show.value = false
+    }
+  }
+  const handleClick = ref<handleClickType>(defaultHandleClick)
 
   // 函数式显示提示信息
-  const showMessage = ($content: string, $options?: SnackBarOptions) => {
+  const showMessage = ($content: string, $options?: SnackBarOptions, $handleClick?: handleClickType) => {
     const delay = show.value ? 200 : 0
     show.value = false
     content.value = $content
@@ -29,6 +41,8 @@ const storeSetup = () => {
     options.vertical = $options?.vertical ?? false
     options.contentClass = $options?.contentClass ?? ''
 
+    handleClick.value = $handleClick || defaultHandleClick
+
     setTimeout(() => {
       show.value = true
     }, delay)
@@ -38,6 +52,7 @@ const storeSetup = () => {
     show,
     content,
     options,
+    handleClick,
     showMessage
   }
 }

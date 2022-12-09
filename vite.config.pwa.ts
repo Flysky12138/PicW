@@ -1,7 +1,7 @@
 import type { VitePWAOptions } from 'vite-plugin-pwa'
 
 const pwaConfig: Partial<VitePWAOptions> = {
-  registerType: 'autoUpdate',
+  registerType: 'prompt',
   workbox: {
     navigateFallback: null,
     runtimeCaching: [
