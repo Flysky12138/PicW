@@ -9,7 +9,7 @@
   "description": "A site for uploading images to github",
   "license": "GPL-3.0-only",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --open",
     "serve": "vite preview",
     "build": "vite build",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
