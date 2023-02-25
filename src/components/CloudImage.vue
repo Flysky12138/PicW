@@ -1,7 +1,7 @@
 <template>
   <v-hover #default="{ isHovering, props }">
     <v-card v-bind="props" :elevation="isHovering ? 8 : 2" rounded="lg">
-      <v-img v-if="item.type == 'file'" :src="fileCdnUrls[0].text" height="200" cover ref="cloudImage" @error="imageLoadError">
+      <v-img v-if="item.type == 'file'" :src="fileCdnUrls[0].text" height="200" cover>
         <v-expand-transition>
           <v-sheet v-show="isHovering" height="100%">
             <v-card variant="tonal" rounded="0" height="100%">
@@ -23,8 +23,8 @@
                     </v-btn>
                   </v-col>
                   <v-col cols="2">
-                    <v-btn block variant="tonal" color="success" @click="btnEvent">
-                      <v-icon :icon="errorTimes == maxErrorTimes ? 'mdi-refresh' : 'mdi-download'"></v-icon>
+                    <v-btn block variant="tonal" color="success">
+                      <v-icon icon="mdi-download"></v-icon>
                     </v-btn>
                   </v-col>
                   <v-col cols="5">
@@ -52,9 +52,7 @@
         </v-expand-transition>
         <template #placeholder>
           <div class="d-flex align-center justify-center fill-height">
-            <v-progress-circular indeterminate :color="errorTimes == 0 ? 'grey-lighten-4' : 'error'">
-              <div v-show="errorTimes > 0">{{ errorTimes }}</div>
-            </v-progress-circular>
+            <v-progress-circular indeterminate color="grey-lighten-4"></v-progress-circular>
           </div>
         </template>
       </v-img>
@@ -68,12 +66,11 @@
 
 <script setup lang="ts">
 import TextChip from '@/components/TextChip.vue'
-import download from '@/libs/download'
 import type { RepoPathContent } from '@/plugins/axios/repo'
 import { useCodeStore } from '@/plugins/stores/code'
 import { useUserStore } from '@/plugins/stores/user'
 import { storeToRefs } from 'pinia'
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { VImg } from 'vuetify/components/VImg'
 
@@ -96,35 +93,6 @@ const { islogin } = storeToRefs(useUserStore())
 // 获取 CDN
 const { getCdnUrlItems } = storeToRefs(useCodeStore())
 const fileCdnUrls = computed(() => getCdnUrlItems.value(props.name, props.repository, props.directory, props.item.name))
-
-// 重新加载
-const cloudImage = ref<VImg>()
-const reloadImage = () => {
-  cloudImage.value!.state = 'idle'
-  setTimeout(() => {
-    cloudImage.value!.state = 'loading'
-  }, 1000)
-}
-// 加载错误
-const maxErrorTimes = 3
-const errorTimes = ref(0)
-const imageLoadError = () => {
-  if (errorTimes.value++ < maxErrorTimes) {
-    reloadImage()
-  } else {
-    errorTimes.value--
-    cloudImage.value!.state = 'loaded'
-  }
-}
-// 按键逻辑
-const btnEvent = () => {
-  if (errorTimes.value == maxErrorTimes) {
-    errorTimes.value = 0
-    reloadImage()
-  } else {
-    download(fileCdnUrls.value[0].text, props.item.name)
-  }
-}
 
 // 进入子目录
 const { push } = useRouter()
