@@ -32,7 +32,7 @@ const storeSetup = () => {
       return formatUrl((username, repository, directory, filename) => [
         {
           label: 'jsDelivr',
-          text: `https://jsd.cdn.zzko.cn/gh/${username}/${repository}/${directory}/${filename}`
+          text: `https://cdn.jsdelivr.net/gh/${username}/${repository}/${directory}/${filename}`
         }
       ])
     }

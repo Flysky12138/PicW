@@ -22,7 +22,7 @@ const pwaConfig: Partial<VitePWAOptions> = {
     ]
   },
   devOptions: {
-    enabled: true
+    enabled: false
   },
   manifest: {
     name: 'PicW',
