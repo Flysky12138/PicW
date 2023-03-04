@@ -16,7 +16,18 @@
                           <v-card-actions>
                             <v-spacer></v-spacer>
                             <v-btn color="warning" variant="text" @click="dialog.delete = false"> 取消 </v-btn>
-                            <v-btn color="success" variant="text" @click="$emit('delete')"> 确认 </v-btn>
+                            <v-btn
+                              color="success"
+                              variant="text"
+                              @click="
+                                () => {
+                                  dialog.delete = false
+                                  $emit('delete')
+                                }
+                              "
+                            >
+                              确认
+                            </v-btn>
                           </v-card-actions>
                         </v-card>
                       </v-dialog>
