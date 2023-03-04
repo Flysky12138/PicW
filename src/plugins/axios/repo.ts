@@ -14,7 +14,7 @@ interface RepoPathContent {
 }
 const repoPathContent = async (owner: string, repo: string, path = '') => {
   try {
-    const { data } = await axios.get<RepoPathContent[]>(`/repos/${owner}/${repo}/contents/${path}`)
+    const { data } = await axios.get<RepoPathContent[]>(`/repos/${owner}/${repo}/contents/${path}?t=${Date.now()}`)
     return data
   } catch (error) {
     return Promise.reject(error)
