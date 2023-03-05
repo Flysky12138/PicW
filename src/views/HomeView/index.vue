@@ -11,6 +11,9 @@
       multiple
       class="auto-height"
       :key="forceUpdate"
+      ref="inputRef"
+      @dragenter="dragEnterHandle"
+      @dragleave="dragLeaveHandle"
     >
       <template #selection="{ fileNames }">
         <transition-group name="slide-y-transition">
@@ -53,6 +56,18 @@ const mdiCloudUploadOutline = computed(() => {
 const autoHeight = computed(() => {
   return files.value.length == 0 ? 'clamp(300px, 50vh, 500px)' : 'auto'
 })
+
+// 拖入文件提示
+interface TemplateRefType {
+  $el: HTMLElement
+}
+const inputRef = ref<TemplateRefType | null>(null)
+const dragEnterHandle = () => {
+  inputRef.value?.$el.classList.add('drag-enter')
+}
+const dragLeaveHandle = () => {
+  inputRef.value?.$el.classList.remove('drag-enter')
+}
 </script>
 
 <style scoped lang="scss">
@@ -60,6 +75,14 @@ const autoHeight = computed(() => {
   min-height: v-bind(autoHeight);
 }
 :deep(.v-input) {
+  .v-input__control {
+    border: 4px dashed transparent;
+  }
+  &.drag-enter .v-input__control {
+    border: 4px dashed #ff9600;
+    border-radius: 8px;
+    overflow: hidden;
+  }
   .v-field {
     overflow: hidden;
   }
